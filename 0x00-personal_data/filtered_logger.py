@@ -8,7 +8,7 @@ import mysql.connector
 
 
 def filter_datum(fields: List[str], redaction: str,
-                 message: str, separator: str):
+                 message: str, separator: str) -> str:
     """function return a log message obfuscated"""
     for f in fields:
         message = re.sub(f'{f}=.*?{separator}',
