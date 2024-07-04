@@ -57,3 +57,25 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         database=os.getenv('PERSONAL_DATA_DB_NAME')
     )
     return my_db_connect
+
+
+def main():
+    """Obtain a database connection using get_db and retrieves all rows
+    in the users table"""
+    my_db = get_db()
+    my_cursor = my_db.cursor()
+    my_cursor.execute("SELECT * FROM users;")
+    field_names = [i[0] for i in my_cursor.description]
+
+    logger = get_logger()
+
+    for rows in my_cursor:
+        str_row = ''.join(f'{f}={str(r)}; ' for r, f in zip(rows, field_names))
+        logger.info(str_row.strip())
+
+    my_cursor.close()
+    my_db.close()
+
+
+if __name__ == '__main__':
+    main()
