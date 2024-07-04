@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""model uses regex to repalce a certain value"""
-from typing import List
+""" Use of regex in replacing occurrences of certain field values """
 import re
+from typing import List
 
 
-def filter_datum(fields: List[str], redaction: str,
-                 message: str, separator: str):
-    """function returns the log message obfuscated"""
-    for f in fields:
-        message = re.sub(f'{f}=(.*?){separator}',
-                         f'{f}={redaction}{separator}', message)
-    return (message)
+def filter_datum(fields: List[str], redaction: str, message: str,
+                 separator: str) -> str:
+    """ Returns regex obfuscated log messages """
+    for field in fields:
+        message = re.sub(f'{field}=(.*?){separator}',
+                         f'{field}={redaction}{separator}', message)
+    return message
