@@ -3,7 +3,7 @@
 from typing import List
 import re
 import logging
-from os import environ
+import os
 import mysql.connector
 
 
@@ -14,3 +14,22 @@ def filter_datum(fields: List[str], redaction: str,
         message = re.sub(f'{f}=.*?{separator}',
                          f'{f}={redaction}{separator}', message)
     return (message)
+
+
+class RedactingFormatter(logging.Formatter):
+    """Redacting Formatter class"""
+
+    REDACTION = "***"
+    FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
+    SEPARATOR = ";"
+
+    def __init__(self):
+        super(RedactingFormatter, self).__init__(self.FORMAT)
+
+    def format(self, record: logging.LogRecord) -> str:
+        """function to return filtered values using filter_datum"""
+        f_msg = filter_datum(self.fields, self.REDACTION, record.message, self.separator)
+        record.message = super().format(record)
+        return (f_msg)
+
+PII_FIELDS = ("name", "email", "password", "ssn", "phone")
