@@ -46,3 +46,14 @@ def get_logger() -> logging.Logger:
     my_handler.setFormatter(RedactingFormatter(List(PII_FIELDS)))
     logger.addHandler(my_handler)
     return (logger)
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """function that returns a connector to the database"""
+    my_db_connect = mysql.connector.connect(
+        user=os.getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
+        password=os.getenv('PERSONAL_DATA_DB_PASSWORD', ''),
+        host=os.getenv('PERSONAL_DATA_DB_HOST', 'localhost'),
+        database=os.getenv('PERSONAL_DATA_DB_NAME')
+    )
+    return my_db_connect
