@@ -4,6 +4,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy import or_
 
 from user import User, Base
 
@@ -35,3 +38,27 @@ class DB:
         self._session.add(the_user)
         self._session.commit()
         return (the_user)
+
+    def find_user_by(self, **kwargs) -> User:
+        """function to find users by a keyword (id, email,...)"""
+        s = self._session
+        try:
+            user = s.query(User).filter_by(**kwargs).one()
+        except NoResultFound:
+            raise NoResultFound()
+        except InvalidRequestError:
+            raise InvalidRequestError()
+        return (user)
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """function use find_user_by to locate user then update it"""
+        user = self.find_user_by(id=user_id)
+
+        for k, _ in kwargs.items():
+            if not hasattr(user, k):
+                raise ValueError("invalid argument {}".format(k))
+
+        for k, v in kwargs.items():
+            setattr(user, k, v)
+
+        self._session.commit()
