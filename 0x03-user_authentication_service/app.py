@@ -14,7 +14,7 @@ def index():
 
 
 @app.route("/users", methods=["POST"])
-def users():
+def users() -> str:
     """POST user and return a josn has many informations"""
     email = request.form.get("email")
     password = request.form.get("password")
