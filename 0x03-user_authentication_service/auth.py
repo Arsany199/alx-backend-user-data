@@ -2,7 +2,7 @@
 """model to encrypt password"""
 import logging
 from typing import Union
-from uuid import uuid4
+import uuid
 import bcrypt
 from sqlalchemy.orm.exc import NoResultFound
 from db import DB
@@ -50,3 +50,8 @@ class Auth:
         except NoResultFound:
             return (False)
         return (False)
+
+
+def _generate_uuid() -> str:
+    """function to generate uuid"""
+    return str(uuid.uuid4())
