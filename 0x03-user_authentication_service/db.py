@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """DB module"""
+import logging
+from typing import Dict
 from sqlalchemy import create_engine
+from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm.session import Session
-from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.session import Session
 from sqlalchemy import or_
-
-from user import User, Base
+from user import Base, User
 
 
 class DB:
@@ -41,9 +42,9 @@ class DB:
 
     def find_user_by(self, **kwargs) -> User:
         """function to find users by a keyword (id, email,...)"""
-        s = self._session
+        session = self._session
         try:
-            user = s.query(User).filter_by(**kwargs).one()
+            user = session.query(User).filter_by(**kwargs).one()
         except NoResultFound:
             raise NoResultFound()
         except InvalidRequestError:
