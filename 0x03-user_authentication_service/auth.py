@@ -95,6 +95,18 @@ class Auth:
         self._db.update_user(myuser.id, reset_token=reset_token)
         return (reset_token)
 
+    def update_password(self, reset_token: str, password: str) -> None:
+        """method that find user using reset_token
+        then updates the password to None"""
+        try:
+            myuser = self._db.find_user_by(reset_token=reset_token)
+        except NoResultFound:
+            raise ValueError("not the right token")
+
+        new_pass = _hash_password(password)
+        self._db.update_user(myuser.id, hashed_password=new_pass,
+                             reset_token=None)
+
 
 def _generate_uuid() -> str:
     """function to generate uuid"""
