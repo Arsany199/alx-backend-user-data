@@ -26,23 +26,28 @@ def users() -> str:
         return jsonify({"message": "email already registered"}), 400
 
 
-@app.route("/sessions", methods=["POST"])
+@app.route('/sessions', methods=["POST"])
 def login() -> str:
     """create a new session for the user store it the session ID
     as a cookie with key "session_id" on the response
     and return a JSON payload of the form"""
     try:
-        email = request.form["email"]
-        password = request.form["password"]
+        email = request.form['email']
+        password = request.form['password']
     except KeyError:
         abort(400)
+
     if not AUTH.valid_login(email, password):
         abort(401)
+
     session_id = AUTH.create_session(email)
 
-    message = {"email": email, "message": "logged in"}
-    jsonify(message).set_cookie("session_id", session_id)
-    return jsonify(message)
+    msg = {"email": email, "message": "logged in"}
+    response = jsonify(msg)
+
+    response.set_cookie("session_id", session_id)
+
+    return response
 
 
 if __name__ == "__main__":
