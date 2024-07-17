@@ -43,7 +43,24 @@ def login() -> str:
     message = {"email": email, "message": "logged in"}
     res = jsonify(message)
     res.set_cookie("session_id", session_id)
-    return res
+    return (res)
+
+
+@app.route("/sessions", methods=["DELETE"])
+def logout() -> str:
+    """find user with session id if exist delete it and redirect to GET /
+    if not found respond with 403 http"""
+    session_id = request.cookies.get("session_id", None)
+
+    if session_id is None:
+        abort(403)
+
+    myuser = AUTH.get_user_from_session_id(session_id)
+    if myuser is None:
+        abort(403)
+
+    AUTH.destroy_session(myuser.id)
+    return (redirect('/'))
 
 
 if __name__ == "__main__":
