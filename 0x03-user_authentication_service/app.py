@@ -32,8 +32,8 @@ def login() -> str:
     as a cookie with key "session_id" on the response
     and return a JSON payload of the form"""
     try:
-        email = request.form["email"]
-        password = request.form["password"]
+        email = request.form['email']
+        password = request.form['password']
     except KeyError:
         abort(400)
     if not AUTH.valid_login(email, password):
