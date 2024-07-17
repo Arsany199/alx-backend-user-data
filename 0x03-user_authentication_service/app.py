@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """model to my app file"""
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, redirect
 from auth import Auth
 
 AUTH = Auth()
@@ -50,16 +50,18 @@ def login() -> str:
 def logout() -> str:
     """find user with session id if exist delete it and redirect to GET /
     if not found respond with 403 http"""
-    session_id = request.cookies.get("session_id")
-    # Retrieve the user associated with the session ID
-    user = AUTH.get_user_from_session_id(session_id)
-    # If no user is found, abort the request with a 403 Forbidden error
-    if user is None:
+    session_id = request.cookies.get("session_id", None)
+
+    if session_id is None:
         abort(403)
-    # Destroy the session associated with the user
-    AUTH.destroy_session(user.id)
-    # Redirect to the home route
-    return redirect("/")
+
+    myuser = AUTH.get_user_from_session_id(session_id)
+    if myuser is None:
+        abort(403)
+
+    AUTH.destroy_session(myuser.id)
+
+    return redirect('/')
 
 
 if __name__ == "__main__":
