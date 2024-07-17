@@ -51,7 +51,7 @@ class Auth:
             return (False)
         return (False)
 
-    def create_session(self, email:str) -> str:
+    def create_session(self, email: str) -> str:
         """function that find user corresponding to email"""
         try:
             user = self._db.find_user_by(email=email)
