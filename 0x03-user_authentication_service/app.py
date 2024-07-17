@@ -76,7 +76,7 @@ def profile() -> str:
     if myuser is None:
         abort(404)
 
-    message = {"email": myuser.email}
+    message = {"email": user.email}
     return jsonify(message), 200
 
 
